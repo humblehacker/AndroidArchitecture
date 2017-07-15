@@ -3,4 +3,6 @@
     <string name="button_first">First</string>
     <string name="button_second">Second</string>
     <string name="other">Other</string>
+    <string name="first">First</string>
+    <string name="second">Second</string>
 </resources>

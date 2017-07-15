@@ -1,43 +1,56 @@
 package com.humblehacker.architecture
 
+import android.arch.lifecycle.LifecycleActivity
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : FragmentActivity()
+class MainActivity : LifecycleActivity()
 {
+    lateinit var viewModel: MainViewModel
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val transaction = fragmentManager.beginTransaction()
-        transaction.add(R.id.fragment_container, FirstFragment())
-        transaction.commit()
+        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
         button_first.setOnClickListener { setFirstFragment() }
         button_second.setOnClickListener { setSecondFragment() }
-        button_other.setOnClickListener { showOtherFragment() }
+        button_other.setOnClickListener { showOtherActivity() }
+
+        if (savedInstanceState == null)
+        {
+            addFirstFragment()
+        }
     }
 
-    private fun showOtherFragment()
+    private fun showOtherActivity()
     {
         val intent = Intent(this, OtherActivity::class.java)
         startActivity(intent)
     }
 
-    private fun setSecondFragment()
+    private fun addFirstFragment()
     {
-        val transaction = fragmentManager.beginTransaction()
-        transaction.replace(R.id.fragment_container, SecondFragment())
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.add(R.id.fragment_container, FirstFragment())
         transaction.commit()
     }
 
     private fun setFirstFragment()
     {
-        val transaction = fragmentManager.beginTransaction()
+        val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_container, FirstFragment())
+        transaction.commit()
+    }
+
+    private fun setSecondFragment()
+    {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragment_container, SecondFragment())
         transaction.commit()
     }
 }
